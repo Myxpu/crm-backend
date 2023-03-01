@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.demo.mapper.SysRightMapper">
+    <resultMap id="sysRightMap" type="com.crm.demo.pojo.entity.SysRight">
+        <result property="rightCode" column="right_code"/>
+        <result property="rightParentCode" column="right_parent_code"/>
+        <result property="rightType" column="right_type"/>
+        <result property="rightText" column="right_text"/>
+        <result property="rightUrl" column="right_url"/>
+        <result property="rightTip" column="right_tip"/>
+    </resultMap>
+
+    <select id="selectSysRightByUsrId" resultMap="sysRightMap">
+        SELECT h.`right_code`, h.`right_parent_code`, h.`right_type`, h.`right_text`, h.`right_url`, h.`right_tip`
+        FROM `sys_role_right` s
+                 INNER JOIN sys_role r ON r.role_id = s.rf_role_id
+                 INNER JOIN sys_right h ON h.right_code = s.rf_right_code
+                 INNER JOIN sys_user u ON u.usr_role_id = r.role_id
+        WHERE u.usr_id = #{usrId}
+    </select>
+
+    <select id="selectSysRightValueByUsrId" resultType="String">
+
+        SELECT h.right_text
+        FROM `sys_role_right` s
+                 INNER JOIN sys_role r ON r.role_id = s.rf_role_id
+                 INNER JOIN sys_right h ON h.right_code = s.rf_right_code
+                 INNER JOIN sys_user u ON u.usr_role_id = r.role_id
+        WHERE u.usr_id = #{usrId}
+    </select>
+
+    <select id="selectAllSysRightValue" resultType="String">
+        SELECT `right_text`
+        FROM `sys_right`
+    </select>
+</mapper>
